@@ -1,0 +1,17 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: cron-scaledobject
+  namespace: default
+spec:
+  scaleTargetRef:
+    name: memtest
+  minReplicaCount: 0
+  cooldownPeriod: 30
+  triggers:
+  - type: cron
+    metadata:
+      timezone: Asia/Shanghai
+      start: 36 15 * * *
+      end: 37 15 * * *
+      desiredReplicas: "5"

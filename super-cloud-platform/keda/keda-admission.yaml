@@ -1,0 +1,101 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  annotations:
+    meta.helm.sh/release-name: keda
+    meta.helm.sh/release-namespace: keda
+  creationTimestamp: "2025-04-26T03:15:17Z"
+  generation: 2
+  labels:
+    app.kubernetes.io/component: operator
+    app.kubernetes.io/instance: keda
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: keda-admission-webhooks
+    app.kubernetes.io/part-of: keda-operator
+    app.kubernetes.io/version: 2.17.0
+    helm.sh/chart: keda-2.17.0
+  name: keda-admission
+  resourceVersion: "2519"
+  uid: 042bd8b2-0ee3-4714-a8cd-212132a10b54
+webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURFRENDQWZpZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFoTVJBd0RnWURWUVFLRXdkTFJVUkIKVDFKSE1RMHdDd1lEVlFRREV3UkxSVVJCTUI0WERUSTFNRFF5TmpBeU1qYzBNbG9YRFRNMU1EUXlOREF6TWpjMApNbG93SVRFUU1BNEdBMVVFQ2hNSFMwVkVRVTlTUnpFTk1Bc0dBMVVFQXhNRVMwVkVRVENDQVNJd0RRWUpLb1pJCmh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBSy9wWlVudCtYSG1vSTNZSXdlc3BnUm5QdGw5U0laR1Y2eWwKNTg1R1J0bnZIb1d4a3BZWXcwdUszaldFbk52U3Y5TnVtTHJRaTlwUms3V1V5aVpUbW16eXNJUVBhRGtmT2owYQpicGYxOVIyUVRNUWZBQUJMMzd6OXlqRGFISlArQWtvYWlJSTluS0IwUTBIc2xOUUdVQktpSHBJRk9VbngwbDZGCldWUnVrQlAyRUZrZiswaUZSRVFjUTBONWFqZjl0Zm0wdHVzTm4reE1kajZubnp3enpSL1pLby8rUmdrNGhyamUKaTFWV1FXY3pxcjdCLzdUZDNJc01jWWVXM1E3UTJIUmljUVYzS2N0dXlJaEFDMDZtTHh1RXZVRm5CREdVSDVWWQorOENmRmNBT0hLZXdnam5KRWxHRm45Z3R2TmpVT1pkNjdYODhZL3RwcUYxK2VHUFhGWVVDQXdFQUFhTlRNRkV3CkRnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCL3dRRk1BTUJBZjh3SFFZRFZSME9CQllFRkJCcGljdjgKOVJjQnhDOGtmZnArV0I5T05QemtNQThHQTFVZEVRUUlNQWFDQkV0RlJFRXdEUVlKS29aSWh2Y05BUUVMQlFBRApnZ0VCQUlpY2lnL0hjUXJTRHVNWVg0ZjdpSEY3dW53VzBNeHZ2SW9wQkxHSjFOa1JTVlFmMlg5UkRydzZEdUZqClBnRGswWE5ZWTBiS0pDT0p6aGFPcWdjYk1QQ1M2QlBZakpXUlpzWmZURkowRm5BQW5YRlhoNlYzeFlzckkzYWsKTUhRNGpSL2dhWFNReDZOQnQ2Zjc3QlNjcmxPM29GWWdNRU14VjJaZjQ3WFZRb2xqZEd4dU1MUFlIL3FSTExVUApZU0VWNGJ0cEpnQmROdWlKT1NkSW9jTTZoQnAxei9LbFhxOXh0YVBUeGpKZVlocGFucFFuVjFnWk1tSUcyMHpiCklYeVh0b3dORW94VTNUbWF2SzRYbTFRRVBLOVBiNUM5Y1M3b0xrREJpeUFJVlgzNE5mZko2NDl6RjUyQVJwdnUKTzcrbFoyTnJ1cDh5b0g1S2xMTDAySzdWOU5VPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+    service:
+      name: keda-admission-webhooks
+      namespace: keda
+      path: /validate-keda-sh-v1alpha1-scaledobject
+      port: 443
+  failurePolicy: Ignore
+  matchPolicy: Equivalent
+  name: vscaledobject.kb.io
+  namespaceSelector: {}
+  objectSelector: {}
+  rules:
+  - apiGroups:
+    - keda.sh
+    apiVersions:
+    - v1alpha1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - scaledobjects
+    scope: '*'
+  sideEffects: None
+  timeoutSeconds: 10
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURFRENDQWZpZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFoTVJBd0RnWURWUVFLRXdkTFJVUkIKVDFKSE1RMHdDd1lEVlFRREV3UkxSVVJCTUI0WERUSTFNRFF5TmpBeU1qYzBNbG9YRFRNMU1EUXlOREF6TWpjMApNbG93SVRFUU1BNEdBMVVFQ2hNSFMwVkVRVTlTUnpFTk1Bc0dBMVVFQXhNRVMwVkVRVENDQVNJd0RRWUpLb1pJCmh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBSy9wWlVudCtYSG1vSTNZSXdlc3BnUm5QdGw5U0laR1Y2eWwKNTg1R1J0bnZIb1d4a3BZWXcwdUszaldFbk52U3Y5TnVtTHJRaTlwUms3V1V5aVpUbW16eXNJUVBhRGtmT2owYQpicGYxOVIyUVRNUWZBQUJMMzd6OXlqRGFISlArQWtvYWlJSTluS0IwUTBIc2xOUUdVQktpSHBJRk9VbngwbDZGCldWUnVrQlAyRUZrZiswaUZSRVFjUTBONWFqZjl0Zm0wdHVzTm4reE1kajZubnp3enpSL1pLby8rUmdrNGhyamUKaTFWV1FXY3pxcjdCLzdUZDNJc01jWWVXM1E3UTJIUmljUVYzS2N0dXlJaEFDMDZtTHh1RXZVRm5CREdVSDVWWQorOENmRmNBT0hLZXdnam5KRWxHRm45Z3R2TmpVT1pkNjdYODhZL3RwcUYxK2VHUFhGWVVDQXdFQUFhTlRNRkV3CkRnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCL3dRRk1BTUJBZjh3SFFZRFZSME9CQllFRkJCcGljdjgKOVJjQnhDOGtmZnArV0I5T05QemtNQThHQTFVZEVRUUlNQWFDQkV0RlJFRXdEUVlKS29aSWh2Y05BUUVMQlFBRApnZ0VCQUlpY2lnL0hjUXJTRHVNWVg0ZjdpSEY3dW53VzBNeHZ2SW9wQkxHSjFOa1JTVlFmMlg5UkRydzZEdUZqClBnRGswWE5ZWTBiS0pDT0p6aGFPcWdjYk1QQ1M2QlBZakpXUlpzWmZURkowRm5BQW5YRlhoNlYzeFlzckkzYWsKTUhRNGpSL2dhWFNReDZOQnQ2Zjc3QlNjcmxPM29GWWdNRU14VjJaZjQ3WFZRb2xqZEd4dU1MUFlIL3FSTExVUApZU0VWNGJ0cEpnQmROdWlKT1NkSW9jTTZoQnAxei9LbFhxOXh0YVBUeGpKZVlocGFucFFuVjFnWk1tSUcyMHpiCklYeVh0b3dORW94VTNUbWF2SzRYbTFRRVBLOVBiNUM5Y1M3b0xrREJpeUFJVlgzNE5mZko2NDl6RjUyQVJwdnUKTzcrbFoyTnJ1cDh5b0g1S2xMTDAySzdWOU5VPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+    service:
+      name: keda-admission-webhooks
+      namespace: keda
+      path: /validate-keda-sh-v1alpha1-triggerauthentication
+      port: 443
+  failurePolicy: Ignore
+  matchPolicy: Equivalent
+  name: vstriggerauthentication.kb.io
+  namespaceSelector: {}
+  objectSelector: {}
+  rules:
+  - apiGroups:
+    - keda.sh
+    apiVersions:
+    - v1alpha1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - triggerauthentications
+    scope: '*'
+  sideEffects: None
+  timeoutSeconds: 10
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURFRENDQWZpZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFoTVJBd0RnWURWUVFLRXdkTFJVUkIKVDFKSE1RMHdDd1lEVlFRREV3UkxSVVJCTUI0WERUSTFNRFF5TmpBeU1qYzBNbG9YRFRNMU1EUXlOREF6TWpjMApNbG93SVRFUU1BNEdBMVVFQ2hNSFMwVkVRVTlTUnpFTk1Bc0dBMVVFQXhNRVMwVkVRVENDQVNJd0RRWUpLb1pJCmh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBSy9wWlVudCtYSG1vSTNZSXdlc3BnUm5QdGw5U0laR1Y2eWwKNTg1R1J0bnZIb1d4a3BZWXcwdUszaldFbk52U3Y5TnVtTHJRaTlwUms3V1V5aVpUbW16eXNJUVBhRGtmT2owYQpicGYxOVIyUVRNUWZBQUJMMzd6OXlqRGFISlArQWtvYWlJSTluS0IwUTBIc2xOUUdVQktpSHBJRk9VbngwbDZGCldWUnVrQlAyRUZrZiswaUZSRVFjUTBONWFqZjl0Zm0wdHVzTm4reE1kajZubnp3enpSL1pLby8rUmdrNGhyamUKaTFWV1FXY3pxcjdCLzdUZDNJc01jWWVXM1E3UTJIUmljUVYzS2N0dXlJaEFDMDZtTHh1RXZVRm5CREdVSDVWWQorOENmRmNBT0hLZXdnam5KRWxHRm45Z3R2TmpVT1pkNjdYODhZL3RwcUYxK2VHUFhGWVVDQXdFQUFhTlRNRkV3CkRnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCL3dRRk1BTUJBZjh3SFFZRFZSME9CQllFRkJCcGljdjgKOVJjQnhDOGtmZnArV0I5T05QemtNQThHQTFVZEVRUUlNQWFDQkV0RlJFRXdEUVlKS29aSWh2Y05BUUVMQlFBRApnZ0VCQUlpY2lnL0hjUXJTRHVNWVg0ZjdpSEY3dW53VzBNeHZ2SW9wQkxHSjFOa1JTVlFmMlg5UkRydzZEdUZqClBnRGswWE5ZWTBiS0pDT0p6aGFPcWdjYk1QQ1M2QlBZakpXUlpzWmZURkowRm5BQW5YRlhoNlYzeFlzckkzYWsKTUhRNGpSL2dhWFNReDZOQnQ2Zjc3QlNjcmxPM29GWWdNRU14VjJaZjQ3WFZRb2xqZEd4dU1MUFlIL3FSTExVUApZU0VWNGJ0cEpnQmROdWlKT1NkSW9jTTZoQnAxei9LbFhxOXh0YVBUeGpKZVlocGFucFFuVjFnWk1tSUcyMHpiCklYeVh0b3dORW94VTNUbWF2SzRYbTFRRVBLOVBiNUM5Y1M3b0xrREJpeUFJVlgzNE5mZko2NDl6RjUyQVJwdnUKTzcrbFoyTnJ1cDh5b0g1S2xMTDAySzdWOU5VPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+    service:
+      name: keda-admission-webhooks
+      namespace: keda
+      path: /validate-keda-sh-v1alpha1-clustertriggerauthentication
+      port: 443
+  failurePolicy: Ignore
+  matchPolicy: Equivalent
+  name: vsclustertriggerauthentication.kb.io
+  namespaceSelector: {}
+  objectSelector: {}
+  rules:
+  - apiGroups:
+    - keda.sh
+    apiVersions:
+    - v1alpha1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - clustertriggerauthentications
+    scope: '*'
+  sideEffects: None
+  timeoutSeconds: 10

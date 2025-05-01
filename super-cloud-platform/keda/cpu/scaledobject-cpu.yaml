@@ -1,0 +1,14 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: cpu-scaledobject
+  namespace: default
+spec:
+  scaleTargetRef:
+    name: php-apache
+  minReplicaCount: 1
+  triggers:
+  - type: cpu
+    metricType: Utilization # Allowed types are 'Utilization' or 'AverageValue'
+    metadata:
+      value: "50"

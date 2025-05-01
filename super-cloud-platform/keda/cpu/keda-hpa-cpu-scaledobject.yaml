@@ -1,0 +1,41 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"keda.sh/v1alpha1","kind":"ScaledObject","metadata":{"annotations":{},"name":"cpu-scaledobject","namespace":"default"},"spec":{"minReplicaCount":1,"scaleTargetRef":{"name":"php-apache"},"triggers":[{"metadata":{"value":"50"},"metricType":"Utilization","type":"cpu"}]}}
+  creationTimestamp: "2025-05-01T03:04:17Z"
+  labels:
+    app.kubernetes.io/managed-by: keda-operator
+    app.kubernetes.io/name: keda-hpa-cpu-scaledobject
+    app.kubernetes.io/part-of: cpu-scaledobject
+    app.kubernetes.io/version: 2.17.0
+    scaledobject.keda.sh/name: cpu-scaledobject
+  name: keda-hpa-cpu-scaledobject
+  namespace: default
+  ownerReferences:
+  - apiVersion: keda.sh/v1alpha1
+    blockOwnerDeletion: true
+    controller: true
+    kind: ScaledObject
+    name: cpu-scaledobject
+    uid: 6530e26a-2b70-4b40-9983-a71968886e91
+  resourceVersion: "383078"
+  uid: 6bdcf334-659d-42c4-9ea0-90f7d0b11686
+spec:
+  maxReplicas: 100
+  metrics:
+  - resource:
+      name: cpu
+      target:
+        averageUtilization: 50
+        type: Utilization
+    type: Resource
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: php-apache
+status:
+  currentMetrics: null
+  desiredReplicas: 0

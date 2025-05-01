@@ -1,18 +1,25 @@
 Backgound:
 
-kubelet got stuck in production, version is 1.18.20
+kubelet got stuck in production, version is 1.18.20, we need to investigate the cause of the problem.
 
 Analysis:
 
-git clone 
+```sh
+git clone git@github.com:kubernetes/kubernetes.git
 git checkout 1.18.20
 make WHAT=cmd/kubelet GOFLAGS="" GOLDFLAGS=""
 go install delve
 the go version of complied kubelet and delve must be the same
 
-dlv core /bin/local/kubelet /path/to/kubelet-gcore.xxx
-
-
+➜  bin git:(kube-1.18) ✗ dlv core kubelet /tmp/kubelet-gcore.3576 
+architecture mismatch between core file (0x454d5f41415243483634) and executable file (0x454d5f5838365f3634)
+➜  bin git:(kube-1.18) ✗ file kube-apiserver
+kube-apiserver: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, Go BuildID=hCZURg3vL0wMblWKTjK2/gpKLo_zvpLnKubE0bllq/s9awxg_mYCs4afz_ZjHC/sAFE13UnQqsm0MBiZwMp, with debug_info, not stripped
+➜  bin git:(kube-1.18) ✗ file /tmp/kubelet-gcore.3576 
+/tmp/kubelet-gcore.3576: ELF 64-bit LSB core file, ARM aarch64, version 1 (SYSV), SVR4-style, from '/usr/bin/kubelet'
+➜  bin git:(kube-1.18) ✗ cat /etc/issue
+Ubuntu 20.04.6 LTS \n \l
+```
 
 To dump a **kubelet** process's memory and analyze it with **Delve (dlv)**, follow these steps:
 
@@ -197,16 +204,20 @@ dlv core /usr/bin/kubelet /tmp/kubelet_dump.1234 < debug_script.txt
 
 ---
 
+### **7. Building `kubelet` with specific flags**
+```bash
+make clean && \
+export GOARCH=arm64 && \
+export GOOS=linux && \
+make WHAT=cmd/kubelet GOFLAGS="" GOLDFLAGS="" KUBE_BUILD_PLATFORMS=linux/arm64
+```
+
 ### **Cheat Sheet: Key Delve Commands**
 ```bash
-# List all functions in a package
-(dlv) funcs k8s.io/kubernetes/pkg/kubelet.*
+➜  kubernetes git:(kube-1.18) ✗ dlv core _output/local/go/bin/linux_arm64/kubelet /tmp/kubelet-gcore.3576 
+Type 'help' for list of commands.
+(dlv) 
 
-# Set a breakpoint in the core dump
-(dlv) break runtime.gopark
-
-# Trace all calls to a function
-(dlv) trace pkg/foo.Bar
 ```
 
 Would you like to simulate a specific crash scenario (e.g., OOM, goroutine leak) for practice? Let me know! 🚀

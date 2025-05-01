@@ -1,0 +1,74 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"keda.sh/v1alpha1","kind":"ScaledObject","metadata":{"annotations":{},"name":"cron-scaledobject","namespace":"default"},"spec":{"cooldownPeriod":300,"minReplicaCount":0,"scaleTargetRef":{"name":"memtest"},"triggers":[{"metadata":{"desiredReplicas":"5","end":"20 15 * * *","start":"17 15 * * *","timezone":"Asia/Shanghai"},"type":"cron"}]}}
+  creationTimestamp: "2025-05-04T07:14:12Z"
+  labels:
+    app.kubernetes.io/managed-by: keda-operator
+    app.kubernetes.io/name: keda-hpa-cron-scaledobject
+    app.kubernetes.io/part-of: cron-scaledobject
+    app.kubernetes.io/version: 2.17.0
+    scaledobject.keda.sh/name: cron-scaledobject
+  name: keda-hpa-cron-scaledobject
+  namespace: default
+  ownerReferences:
+  - apiVersion: keda.sh/v1alpha1
+    blockOwnerDeletion: true
+    controller: true
+    kind: ScaledObject
+    name: cron-scaledobject
+    uid: b704f8ea-3598-4ce3-8fcd-915453df536e
+  resourceVersion: "688649"
+  uid: 3dcbe1fe-f305-4d4e-872b-651232a6149e
+spec:
+  maxReplicas: 100
+  metrics:
+  - external:
+      metric:
+        name: s0-cron-Asia-Shanghai-1715xxx-2015xxx
+        selector:
+          matchLabels:
+            scaledobject.keda.sh/name: cron-scaledobject
+      target:
+        averageValue: "1"
+        type: AverageValue
+    type: External
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: memtest
+status:
+  conditions:
+  - lastTransitionTime: "2025-05-04T07:14:27Z"
+    message: recommended size matches current size
+    reason: ReadyForNewScale
+    status: "True"
+    type: AbleToScale
+  - lastTransitionTime: "2025-05-04T07:18:43Z"
+    message: 'the HPA was able to successfully calculate a replica count from external
+      metric s0-cron-Asia-Shanghai-1715xxx-2015xxx(&LabelSelector{MatchLabels:map[string]string{scaledobject.keda.sh/name:
+      cron-scaledobject,},MatchExpressions:[]LabelSelectorRequirement{},})'
+    reason: ValidMetricFound
+    status: "True"
+    type: ScalingActive
+  - lastTransitionTime: "2025-05-04T07:18:58Z"
+    message: the desired count is within the acceptable range
+    reason: DesiredWithinRange
+    status: "False"
+    type: ScalingLimited
+  currentMetrics:
+  - external:
+      current:
+        averageValue: "1"
+      metric:
+        name: s0-cron-Asia-Shanghai-1715xxx-2015xxx
+        selector:
+          matchLabels:
+            scaledobject.keda.sh/name: cron-scaledobject
+    type: External
+  currentReplicas: 5
+  desiredReplicas: 5
+  lastScaleTime: "2025-05-04T07:18:58Z"

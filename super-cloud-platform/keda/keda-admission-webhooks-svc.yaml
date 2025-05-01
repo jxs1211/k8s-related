@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    meta.helm.sh/release-name: keda
+    meta.helm.sh/release-namespace: keda
+  creationTimestamp: "2025-04-26T03:15:17Z"
+  labels:
+    app.kubernetes.io/component: operator
+    app.kubernetes.io/instance: keda
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: keda-admission-webhooks
+    app.kubernetes.io/part-of: keda-operator
+    app.kubernetes.io/version: 2.17.0
+    helm.sh/chart: keda-2.17.0
+  name: keda-admission-webhooks
+  namespace: keda
+  resourceVersion: "1376"
+  uid: c96bb972-0f7d-4a53-9659-70b45d5f3ac5
+spec:
+  clusterIP: 10.96.10.122
+  clusterIPs:
+  - 10.96.10.122
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - appProtocol: https
+    name: https
+    port: 443
+    protocol: TCP
+    targetPort: 9443
+  selector:
+    app: keda-admission-webhooks
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
