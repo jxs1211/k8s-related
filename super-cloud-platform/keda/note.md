@@ -1,6 +1,7 @@
 ### Scaler
 
 #### Validation
+```mermaid
 graph TD
     A["Reconcile<br>(scaledobject_controller.go)"] --> B["reconcileScaledObject<br>(scaledobject_controller.go)"]
     B --> C["ensureHPAForScaledObjectExists<br>(scaledobject_controller.go)"]
@@ -18,7 +19,9 @@ graph TD
     N --> O["setValue<br>(typed_config.go)"]
     O --> P["parseTypedConfig<br>(typed_config.go)"]
     P --> Q["Validate<br>(cron_scaler.go)"]
+```
 #### GetMetricsSpecForScaling
+```mermaid
 flowchart TD
     A["Reconcile\n(scaledobject_controller.go)"] --> B["reconcileScaledObject\n(scaledobject_controller.go)"]
     B --> C["ensureHPAForScaledObjectExists\n(scaledobject_controller.go)"]
@@ -27,8 +30,51 @@ flowchart TD
     E --> F["getScaledObjectMetricSpecs\n(hpa.go)"]
     F --> G["GetMetricSpecForScaling\n(scalers_cache.go)"]
     G --> H["GetMetricSpecForScaling\n(cron_scaler.go)"]
+```
 #### GetMetricsAndActivity
 ![img](./keda-GetMetricsAndActivity.png)
+
+#### RequestScale
+```mermaid
+graph TD
+    A[Reconcile github.com/kedacore/keda/v2/controllers/keda - scaledobject_controller.go] --> B[reconcileScaledObject github.com/kedacore/keda/v2/controllers/keda - scaledobject_controller.go]
+    B --> C[requestScaleLoop github.com/kedacore/keda/v2/pkg/scaling - scaledobject_controller.go]
+    C --> D[HandleScalebleObject github.com/kedacore/keda/v2/pkg/scaling - scale_handler.go]
+    D --> E[startScaleLoop github.com/kedacore/keda/v2/pkg/scaling - scale_handler.go]
+    E --> F[checkScalers github.com/kedacore/keda/v2/pkg/scaling/executor - scale_handler.go]
+    F --> G[RequestScale github.com/kedacore/keda/v2/pkg/scaling/executor - scale_scaledobjects.go]
+    G --> H[updateScaleOnScaleTarget github.com/kedacore/keda/v2/pkg/scaling/executor - scale_scaledobjects.go]
+```
+```go
+func (h *scaleHandler) checkScalers(ctx context.Context, scalableObject interface{}, scalingMutex sync.Locker) {
+		...
+		isActive, isError, metricsRecords, activeTriggers, err := h.getScaledObjectState(ctx, obj)
+		if err != nil {
+			log.Error(err, "error getting state of scaledObject", "scaledObject.Namespace", obj.Namespace, "scaledObject.Name", obj.Name)
+			return
+		}
+
+		h.scaleExecutor.RequestScale(ctx, obj, isActive, isError, &executor.ScaleExecutorOptions{ActiveTriggers: activeTriggers})
+```
+
+### External Scaler
+graph TD
+    A[Reconcile github.com/kedacore/keda/v2/controllers/keda - scaledobject_controller.go] --> B[reconcileScaledObject github.com/kedacore/keda/v2/controllers/keda - scaledobject_controller.go]
+    B --> C[requestScaleLoop github.com/kedacore/keda/v2/pkg/scaling - scaledobject_controller.go]
+    C --> D[HandleScalableObject github.com/kedacore/keda/v2/pkg/scaling - scale_handler.go]
+    D --> E[startScaleLoop github.com/kedacore/keda/v2/pkg/scaling - scale_handler.go]
+    E --> F[checkScalers github.com/kedacore/keda/v2/pkg/scaling - scale_handler.go]
+    F --> G[getScaledObjectState github.com/kedacore/keda/v2/pkg/scaling - scale_handler.go]
+    G --> H[getScalerState github.com/kedacore/keda/v2/pkg/scaling/cache - scale_handler.go]
+    H --> I[GetScaledObjectMetrics github.com/kedacore/keda/v2/pkg/scaling/cache - scale_handler.go]
+    I --> J[GetMetricsAndActivityForScaler github.com/kedacore/keda/v2/pkg/scalers - scalers_cache.go]
+    J --> K[GetMetricsAndActivity github.com/kedacore/keda/v2/pkg/scalers - external_scaler.go]
+    K --> L[getClientForConnectionPool github.com/kedacore/keda/v2/pkg/scalers - external_scaler.go]
+
+#### [GetMetricsAndActivity](https://github.com/kedacore/keda/blob/9b954d4430e2530cc4bb700528e148b6baac2de7/pkg/scalers/external_scaler.go#L209)
+
+##### grpcClient.GetMetrics
+##### grpcClient.IsActive
 
 ### admission webhook:
 #### keda
