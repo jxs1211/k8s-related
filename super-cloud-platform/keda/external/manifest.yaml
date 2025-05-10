@@ -1,0 +1,43 @@
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: external-scaler
+  labels:
+    app: external-scaler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: external-scaler
+  template:
+    metadata:
+      labels:
+        app: external-scaler
+    spec:
+      containers:
+      - name: scaler
+        image: github.com/jxs1211/external:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 50051
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+---
+# service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-scaler
+spec:
+  selector:
+    app: external-scaler
+  ports:
+    - protocol: TCP
+      port: 50051
+      targetPort: 50051

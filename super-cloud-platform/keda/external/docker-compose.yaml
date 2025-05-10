@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  external:
+    container_name: externalscaler
+    image: github.com/jxs1211/external:latest
+    ports:
+      - "50051:50051"
+    restart: unless-stopped

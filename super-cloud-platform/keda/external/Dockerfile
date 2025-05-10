@@ -1,16 +1,14 @@
-FROM golang:1.24.0 as builder
-
-WORKDIR /src
-
+# Build stage
+FROM docker.io/golang:1.23-alpine AS builder
+WORKDIR /app
+COPY go.mod go.sum ./
+RUN go mod download
 COPY . .
+RUN CGO_ENABLED=0 GOOS=linux go build -o /server ./server
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GO111MODULE=on go build -a -o external-scaler main.go
-
-
-FROM alpine:latest
-
-WORKDIR /
-
-COPY --from=builder /src/external-scaler .
-
-ENTRYPOINT ["/external-scaler"]
+# Final stage
+FROM docker.io/alpine:latest
+WORKDIR /app
+COPY --from=builder /server /app/server
+EXPOSE 50051
+ENTRYPOINT ["/app/server"]

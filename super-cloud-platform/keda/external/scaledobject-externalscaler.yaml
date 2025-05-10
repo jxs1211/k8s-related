@@ -1,0 +1,12 @@
+# scaledobject.yaml
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: external-scaledobject
+spec:
+  scaleTargetRef:
+    name: http  # The deployment you want KEDA to scale
+  triggers:
+  - type: external
+    metadata:
+      scalerAddress: "external-scaler.default.svc.cluster.local:50051"
