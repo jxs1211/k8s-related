@@ -1,76 +1,11 @@
 
-## Concept
+```sh
+analyze the code elasticsearch_test.go , write a markdown to guide the test process step by step and be able to operate manually
 
-## reconcile loop
+- if the step is related to create k8s resource, use kubectl
 
-## validation
-### ScaledObject
-#### field validation
-#### webhook(admission control and ValidaingWebhook)
-### Scaler
-```go
-func parseElasticsearchMetadata(config *scalersconfig.ScalerConfig) (elasticsearchMetadata, error) {
-  meta := elasticsearchMetadata{}
-  err := config.TypedConfig(&meta)
-
-// pkg/scalers/scalersconfig/typed_config.go
-func (sc *ScalerConfig) parseTypedConfig(typedConfig any, parentOptional bool) error {
-  ...
-  if validator, ok := typedConfig.(CustomValidator); ok {
-		if err := validator.Validate(); err != nil {
-			errs = append(errs, err)
-		}
-	}
-  ...
-}
-// pkg/scalers/elasticsearch_scaler.go
-type elasticsearchMetadata struct {
-  ...
-	Parameters            []string `keda:"name=parameters,            order=triggerMetadata, optional, separator=;"`
-// pkg/scalers/elasticsearch_scaler.go
-func (m *elasticsearchMetadata) Validate() error {
-  ...
-}
-// pkg/scalers/scalersconfig/typed_config.go
-func paramsFromTag(tag string, field reflect.StructField) (Params, error) {
-    ...
-		case separatorTag:
-			if len(tsplit) > 1 {
-				params.Separator = strings.TrimSpace(tsplit[1])
-			}
-
-func splitWithSeparator(valFromConfig, customSeparator string) []string {
-	separator := ","
-	if customSeparator != "" {
-		separator = customSeparator
-	}
-	return strings.Split(valFromConfig, separator)
-}
-
+- if the step is related to operate elasticsearch(create template, search doc, add element, query and etc), use curl with proper explaination
 ```
-## GetMetricSpecForScaling
-
-## GetMetricsAndActivity
-```go
-// pkg/scalers/elasticsearch_scaler.go
-func (s *elasticsearchScaler) GetMetricsAndActivity(ctx context.Context, metricName string) ([]external_metrics.ExternalMetricValue, bool, error) {
-	num, err := s.getQueryResult(ctx)
-	if err != nil {
-		return []external_metrics.ExternalMetricValue{}, false, fmt.Errorf("error inspecting elasticsearch: %w", err)
-	}
-
-	metric := GenerateMetricInMili(metricName, num)
-
-	return []external_metrics.ExternalMetricValue{metric}, num > s.metadata.ActivationTargetValue, nil
-}
-```
-## readiness probe and liveness probe ??
-
-
-## User case
-
-
-
 
           
 # Elasticsearch Scaler Test Guide
@@ -534,19 +469,3 @@ kubectl delete namespace elasticsearch-test-ns
 - `valueLocation: "hits.total.value"`: Where to find the count in Elasticsearch response
 
 This test demonstrates KEDA's ability to scale workloads based on Elasticsearch query results, using either search templates or direct queries.
-
-### prerequisite
-
-### Deploy target application
-
-### Define ScaledObject
-
-### Verify ScaledObject
-
-#### Scaling up
-
-#### Scaling down
-
-#### Clean up
-
-## takeaway
