@@ -712,3 +712,4 @@ HPA:
 - https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/
 - https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#algorithm-details
 - https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#requests-and-limits
+- [Build&Debug&Deploy-KEDA](https://github.com/kedacore/keda/blob/main/BUILD.md)

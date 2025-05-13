@@ -1,6 +1,23 @@
 - introduction
 - arch and key feature
-- code dive
+- controller-runtime
+  - arch
+  - bootup process
+  - dataflow in real case
+  - perceive events reconcilation vs. periodical reconcilation
+- keda-operator
+  - arch
+  - bootup process
+  - dataflow in common case
+  - 2 layers valiation
+    - CRD
+      - tag validation
+      - admission webhook
+    - Trigger
+      - runtime validation
+  - two aspect of auto scaling
+    - keda operator
+    - HPA controller with keda-metrics-apiserver
 - scaling based on kafka topic
 - scaling based on mysql
 - scaling based on redis

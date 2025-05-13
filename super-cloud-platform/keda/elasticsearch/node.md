@@ -240,7 +240,7 @@ kubectl exec -n elasticsearch-test-ns elasticsearch-0 -- curl -sS -H 'Content-Ty
     "number_of_replicas": 0,
     "number_of_shards": 1
   }
-}'
+}'|jq
 ```
 
 Then, create the search template:
@@ -277,7 +277,7 @@ kubectl exec -n elasticsearch-test-ns elasticsearch-0 -- curl -sS -H 'Content-Ty
       }
     }
   }
-}'
+}'|jq
 ```
 
 ## Test 1: Using Search Template
@@ -329,6 +329,17 @@ for i in {1..3}; do
   # Add document to Elasticsearch
   kubectl exec -n elasticsearch-test-ns elasticsearch-0 -- curl -sS -H 'Content-Type: application/json' -u 'elastic:passw0rd' -XPOST http://localhost:9200/keda/_doc -d "$DOC"
 done
+
+# Builds a search template query using these parameters,executes it against the Elasticsearch index "keda"
+kubectl exec -n elasticsearch-test-ns elasticsearch-0 -- curl -sS -u 'elastic:passw0rd' -XGET "http://localhost:9200/keda/_search/template?pretty" -H 'Content-Type: application/json' -d'
+{
+  "id": "keda-search-template",
+  "params": {
+    "dummy_value": 1,
+    "dumb_value": "oOooo"
+  }
+}
+'|jq
 ```
 
 Verify that the deployment doesn't scale (should remain at 0 replicas):
@@ -355,7 +366,15 @@ done
 Verify that the deployment scales out to max replicas (should become 2 replicas):
 
 ```bash
-kubectl get deployment elasticsearch-test-deployment -n elasticsearch-test-ns -w
+➜  keda git:(main) ✗ kg deploy -n elasticsearch-test-ns --watch
+NAME                            READY   UP-TO-DATE   AVAILABLE   AGE
+elasticsearch-test-deployment   0/0     0            0           60m
+elasticsearch-test-deployment   1/1     1            1           60m
+elasticsearch-test-deployment   1/2     1            1           60m
+elasticsearch-test-deployment   1/2     1            1           60m
+elasticsearch-test-deployment   1/2     1            1           60m
+elasticsearch-test-deployment   1/2     2            1           60m
+elasticsearch-test-deployment   2/2     2            2           60m
 ```
 
 ### 4. Test Scale In
@@ -370,7 +389,18 @@ sleep 120
 Verify that the deployment scales in to min replicas:
 
 ```bash
-kubectl get deployment elasticsearch-test-deployment -n elasticsearch-test-ns -w
+➜  keda git:(main) ✗ kg deploy -n elasticsearch-test-ns --watch
+NAME                            READY   UP-TO-DATE   AVAILABLE   AGE
+elasticsearch-test-deployment   1/1     1            1           60m
+elasticsearch-test-deployment   1/2     1            1           60m
+elasticsearch-test-deployment   1/2     1            1           60m
+elasticsearch-test-deployment   1/2     1            1           60m
+elasticsearch-test-deployment   1/2     2            1           60m
+elasticsearch-test-deployment   2/2     2            2           60m
+elasticsearch-test-deployment   2/0     2            2           61m
+elasticsearch-test-deployment   2/0     2            2           61m
+elasticsearch-test-deployment   0/0     0            0           61m
+
 ```
 
 ### 5. Delete the ScaledObject
