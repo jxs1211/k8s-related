@@ -1,4 +1,11 @@
-validation example
+## 2 Layers validation
+CRD
+- tag validation
+- admission webhook
+Trigger
+- runtime validation
+
+#### validation example
 ```mermaid
 graph TD
     A[Reconcile<br>github.com/kedacore/keda/v2/controllers/keda<br>scaledobject_controller.go]
