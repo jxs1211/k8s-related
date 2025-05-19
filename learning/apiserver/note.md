@@ -1,4 +1,4 @@
-
+```mermaid
 graph TD
     A["$ cd $GOPATH/src/k8s.io"] --> B["$ git clone https://github.com/kubernetes/kubernetes"]
     B --> C["$ cd kubernetes"]
@@ -14,6 +14,7 @@ graph TD
 
     classDef command fill:#f5f5f5,stroke:#666,stroke-width:1px;
     class A,B,C,D,E,F command;
+```
 
 以下是基于《Kubernetes API Server源码分析与扩展开发》的章节解析及相关官方文档链接，结合Kubernetes核心架构与扩展开发实践：
 

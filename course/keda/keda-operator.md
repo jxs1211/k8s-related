@@ -1,4 +1,53 @@
-validation example
+Based on v2.17.1
+
+## bootup process
+### operator
+### metrics-apiserver
+#### collect metrics from   
+  - GetMetricSpecForScaling
+  - GetMetricsAndActivity
+##### expose metrics to HPA controller for scaling
+### webhooks
+#### validate KEDA CRD
+
+## reconcile process
+
+- reconcileScaledObject
+- startPushScaler
+- startScaleLoop 
+	checkScalers
+
+### Get scaledObject state
+isActive, isError, metricsRecords, activeTriggers, err := h.getScaledObjectState
+- GetScalersCache
+  - using exist scaler
+  - create new scaler
+- Build scaler
+  - NewXXXScaler
+    - parse(validate) XXX metadata
+- getScalerState
+  - GetMetricSpecForScaling
+  - GetMetricsAndActivity
+### scaling decision
+h.scaleExecutor.RequestScale(ctx, obj, isActive, isError, &executor.ScaleExecutorOptions{ActiveTriggers: activeTriggers})
+#### Scaling 0~1 with Keda operator
+  - scaling up
+    pkg/scaling/executor/scale_scaledobjects.go
+113:                    e.scaleFromZeroOrIdle(ctx, logger, scaledObject, currentScale, options.ActiveTriggers)
+#### Scaling 1~N with HPA controller
+  - scaling down
+    pkg/scaling/executor/scale_scaledobjects.go
+169:                    e.scaleToZeroOrIdle(ctx, logger, scaledObject, currentScale)
+
+
+## 2 Layers validation
+CRD
+- tag validation
+- admission webhook
+Trigger
+- runtime validation
+
+#### validation example
 ```mermaid
 graph TD
     A[Reconcile<br>github.com/kedacore/keda/v2/controllers/keda<br>scaledobject_controller.go]
